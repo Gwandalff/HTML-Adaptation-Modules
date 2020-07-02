@@ -17,7 +17,7 @@ public class ListListner implements ExecutionEventListener {
 	public void onEnter(EventContext context, VirtualFrame frame) {
 		HTMLNodeBlockTag ul = (HTMLNodeBlockTag) context.getInstrumentedNode();
 		HTMLNodeBase[] children =  ul.children();
-		if (children.length > 10) {
+		if (children.length > 5) {
 			throw context.createUnwind(ul);
 		}
 	}

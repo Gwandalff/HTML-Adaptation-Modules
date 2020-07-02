@@ -25,19 +25,27 @@ import fr.gjouneau.truffle.HTML.nodes.HTMLNodeEmptyTag;
 
 public class SrcListener implements ExecutionEventListener {
 
-	Map<String, Boolean> imageSizes;
-	int threshold;
-	boolean isImage;
-	final String FOLDER = "/home/gwandalf/ImageDegradation";
+	private Map<String, Boolean> imageSizes;
+	private int threshold;
+	private boolean isImage;
+	private final String FOLDER;
+	private String BASE;
 
-	public SrcListener(int threshold) {
+	public SrcListener(int threshold, String folder) {
 		this.imageSizes = new HashMap<String, Boolean>();
 		this.threshold = threshold;
 		this.isImage = false;
+		this.BASE = "";
+		this.FOLDER = folder + (folder.endsWith("/")?"":"/");
 	}
 
 	public void setIsImage(boolean isImage) {
 		this.isImage = isImage;
+	}
+	
+	public void setBASE(String base) {
+		System.err.println("BASE = " + base);
+		this.BASE = base;
 	}
 
 	public void onEnter(EventContext context, VirtualFrame frame) {
@@ -112,7 +120,7 @@ public class SrcListener implements ExecutionEventListener {
 	private void saveImage(String imageUrl, String destinationFile) throws IOException {
 		String resolvedURL = imageUrl;
 		if (!imageUrl.startsWith("http"))
-			resolvedURL = "http://www.cnrs.fr" + imageUrl;
+			resolvedURL = this.BASE + (imageUrl.startsWith("/")?"":"/") + imageUrl;
 		URL url = new URL(resolvedURL);
 		InputStream is = url.openStream();
 		File img = new File(destinationFile);

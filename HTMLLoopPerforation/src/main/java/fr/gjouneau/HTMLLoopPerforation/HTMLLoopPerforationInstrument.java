@@ -34,7 +34,7 @@ public class HTMLLoopPerforationInstrument extends TruffleInstrument {
 	
 	private void enable(final Env env) {
 		Instrumenter instrumenter = env.getInstrumenter();
-        SourceSectionFilter filter = SourceSectionFilter.newBuilder().tagIs(UL.class).tagIs(OL.class).build();
+        SourceSectionFilter filter = SourceSectionFilter.newBuilder().tagIs(UL.class).build();
         instrumenter.attachExecutionEventListener(filter, new ListListner());
     }
 	

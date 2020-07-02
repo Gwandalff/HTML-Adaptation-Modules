@@ -1,3 +1,7 @@
+.project
+.settings/*
+addTools/.project
+addTools/.settings/*
 ImageDegradation/target/*
 ImageDegradation/.settings/*
 ImageDegradation/.classpath

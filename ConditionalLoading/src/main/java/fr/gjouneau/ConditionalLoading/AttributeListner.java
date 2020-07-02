@@ -15,6 +15,7 @@ import fr.gjouneau.truffle.HTML.nodes.HTMLNodeEmptyTag;
 public class AttributeListner implements ExecutionEventListener {
 
 	private final Set<String> attributesToChange;
+	private boolean isOK;
 
 	public AttributeListner() {
 		this.attributesToChange = new HashSet<String>();
@@ -23,15 +24,18 @@ public class AttributeListner implements ExecutionEventListener {
 		this.attributesToChange.add("href");
 		this.attributesToChange.add("data");
 		this.attributesToChange.add("poster");
+		this.isOK = false;
 	}
 
 	public void onEnter(EventContext context, VirtualFrame frame) {
 		HTMLNodeAttribute attr = (HTMLNodeAttribute) context.getInstrumentedNode();
+		
+		if (isOK) {
+			isOK = false;
+			return;
+		}
+		
 		if (attributesToChange.contains(attr.getName().toLowerCase())) {
-			if(attr.getName().toLowerCase() == "href"
-					&& !((HTMLNodeBaseTag) attr.getParent()).hasTag(HTMLInstrumentationTags.LINK.class) ) {
-				return;
-			}
 			//System.out.println("DEBUG : "+attr.getName() + "="+ (attr.getValue()==null?"null":attr.getValue()));
 			String value = attr.getValue();
 			if (value == null || (value.startsWith("http"))) {
@@ -53,6 +57,10 @@ public class AttributeListner implements ExecutionEventListener {
 
 	public Object onUnwind(EventContext context, VirtualFrame frame, Object info) {
 		return "";
+	}
+	
+	public void setisOK() {
+		this.isOK = true;
 	}
 
 }

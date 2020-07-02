@@ -12,7 +12,9 @@ import com.oracle.truffle.api.instrumentation.SourceSectionFilter;
 import com.oracle.truffle.api.instrumentation.TruffleInstrument;
 import com.oracle.truffle.api.instrumentation.TruffleInstrument.Registration;
 
+import fr.gjouneau.truffle.HTML.instrumentation.HTMLInstrumentationTags.A;
 import fr.gjouneau.truffle.HTML.instrumentation.HTMLInstrumentationTags.Attribute;
+import fr.gjouneau.truffle.HTML.instrumentation.HTMLInstrumentationTags.BASE;
 import fr.gjouneau.truffle.HTML.instrumentation.HTMLInstrumentationTags.Text;
 
 @Registration(id = ConditionalLoadingInstrument.ID, name = "ConditionalLoading", version = "0.1", services = ConditionalLoadingInstrument.class)
@@ -35,8 +37,16 @@ public class ConditionalLoadingInstrument extends TruffleInstrument {
 	private void enable(final Env env) {
 		Instrumenter instrumenter = env.getInstrumenter();
 		
+		AttributeListner attr = new AttributeListner();
+		ParentListener a = new ParentListener(attr);
+		ParentListener base = new ParentListener(attr);
+		
         SourceSectionFilter filter = SourceSectionFilter.newBuilder().tagIs(Attribute.class).build();
-        instrumenter.attachExecutionEventListener(filter, new AttributeListner());
+        instrumenter.attachExecutionEventListener(filter, attr);
+        SourceSectionFilter anchor = SourceSectionFilter.newBuilder().tagIs(A.class).build();
+        SourceSectionFilter baseFilter = SourceSectionFilter.newBuilder().tagIs(BASE.class).build();
+        instrumenter.attachExecutionEventListener(anchor, a);
+        instrumenter.attachExecutionEventListener(baseFilter, base);
     }
 	
 	@Override
