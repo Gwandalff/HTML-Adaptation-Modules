@@ -20,8 +20,8 @@ public class BaseListener implements ExecutionEventListener {
 		HTMLNodeEmptyTag base = (HTMLNodeEmptyTag) context.getInstrumentedNode();
 		HTMLNodeAttribute[] attrs = base.getAttributes();
 		for (int i = 0; i < attrs.length; i++) {
-			System.err.println("ATTRIBUTE : "+attrs[i].getName()+" => "+attrs[i].getValue());
 			System.err.println("          : "+attrs[i].execute(frame));
+			System.err.println("ATTRIBUTE : "+attrs[i].getName()+" => "+attrs[i].getValue());
 			if (attrs[i].getName().toLowerCase().equals("href")) {
 				listner.setBASE(attrs[i].getValue());
 				break;

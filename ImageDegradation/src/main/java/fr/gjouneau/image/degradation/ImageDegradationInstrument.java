@@ -36,7 +36,6 @@ public class ImageDegradationInstrument extends TruffleInstrument {
 		final OptionValues options = env.getOptions();
 		String folder = FOLDER.getValue(options);
         if (ENABLED.getValue(options) && !folder.equals("")) {
-        	System.err.println("HELLO");
             enable(env, folder);
             env.registerService(this);
         }

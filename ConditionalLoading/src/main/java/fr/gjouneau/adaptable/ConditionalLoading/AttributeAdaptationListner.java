@@ -1,23 +1,25 @@
-package fr.gjouneau.ConditionalLoading;
+package fr.gjouneau.adaptable.ConditionalLoading;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import com.oracle.truffle.adaptable.module.AdaptationListener;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.EventContext;
 import com.oracle.truffle.api.instrumentation.ExecutionEventListener;
+import com.oracle.truffle.api.nodes.Node;
 
 import fr.gjouneau.truffle.HTML.instrumentation.HTMLInstrumentationTags;
 import fr.gjouneau.truffle.HTML.nodes.HTMLNodeAttribute;
 import fr.gjouneau.truffle.HTML.nodes.HTMLNodeBaseTag;
 import fr.gjouneau.truffle.HTML.nodes.HTMLNodeEmptyTag;
 
-public class AttributeListner implements ExecutionEventListener {
+public class AttributeAdaptationListner extends AdaptationListener {
 
 	private final Set<String> attributesToChange;
 	private boolean isOK;
 
-	public AttributeListner() {
+	public AttributeAdaptationListner() {
 		this.attributesToChange = new HashSet<String>();
 		this.attributesToChange.add("src");
 		this.attributesToChange.add("srcset");
@@ -26,41 +28,36 @@ public class AttributeListner implements ExecutionEventListener {
 		this.attributesToChange.add("poster");
 		this.isOK = false;
 	}
+	
+	public void setisOK() {
+		this.isOK = true;
+	}
 
-	public void onEnter(EventContext context, VirtualFrame frame) {
-		HTMLNodeAttribute attr = (HTMLNodeAttribute) context.getInstrumentedNode();
-		
+	@Override
+	public void before(Node instrumentedNode) {
+		HTMLNodeAttribute attr = (HTMLNodeAttribute) instrumentedNode;
 		if (isOK) {
 			isOK = false;
 			return;
 		}
 		
 		if (attributesToChange.contains(attr.getName().toLowerCase())) {
-			//System.out.println("DEBUG : "+attr.getName() + "="+ (attr.getValue()==null?"null":attr.getValue()));
 			String value = attr.getValue();
 			if (value == null || (value.startsWith("http"))) {
-				//System.out.println("DEBUG : "+ value + " start with HTTP");
-				throw context.createUnwind(attr);
+				bypass(attr);
 			}
 		}
 	}
 
-	public void onReturnValue(EventContext context, VirtualFrame frame, Object result) {
-		// TODO Auto-generated method stub
+	@Override
+	public void afterResult(Node instrumentedNode, Object result) {}
 
-	}
+	@Override
+	public void afterException(Node instrumentedNode, Throwable exception) {}
 
-	public void onReturnExceptional(EventContext context, VirtualFrame frame, Throwable exception) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public Object onUnwind(EventContext context, VirtualFrame frame, Object info) {
+	@Override
+	public Object afterBypass(Node instrumentedNode) {
 		return "";
-	}
-	
-	public void setisOK() {
-		this.isOK = true;
 	}
 
 }
