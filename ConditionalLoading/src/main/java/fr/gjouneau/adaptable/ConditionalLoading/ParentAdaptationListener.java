@@ -16,18 +16,23 @@ public class ParentAdaptationListener extends AdaptationListener {
 
 	@Override
 	public void before(Node instrumentedNode) {
-		attr.setisOK();		
+		attr.setisOK(true);		
 	}
 
 	@Override
-	public void afterResult(Node instrumentedNode, Object result) {}
+	public void afterResult(Node instrumentedNode, Object result) {
+		attr.setisOK(false);
+	}
 
 	@Override
-	public void afterException(Node instrumentedNode, Throwable exception) {}
+	public void afterException(Node instrumentedNode, Throwable exception) {
+		attr.setisOK(false);
+	}
 
 	@Override
-	public Object afterBypass(Node instrumentedNode) {
+	public Object afterBypass(Node instrumentedNode, Object info) {
 		return "";
 	}
+
 
 }

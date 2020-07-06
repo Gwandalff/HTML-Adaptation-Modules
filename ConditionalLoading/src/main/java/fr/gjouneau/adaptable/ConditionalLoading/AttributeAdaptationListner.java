@@ -29,15 +29,14 @@ public class AttributeAdaptationListner extends AdaptationListener {
 		this.isOK = false;
 	}
 	
-	public void setisOK() {
-		this.isOK = true;
+	public void setisOK(boolean b) {
+		this.isOK = b;
 	}
 
 	@Override
 	public void before(Node instrumentedNode) {
 		HTMLNodeAttribute attr = (HTMLNodeAttribute) instrumentedNode;
 		if (isOK) {
-			isOK = false;
 			return;
 		}
 		
@@ -56,8 +55,9 @@ public class AttributeAdaptationListner extends AdaptationListener {
 	public void afterException(Node instrumentedNode, Throwable exception) {}
 
 	@Override
-	public Object afterBypass(Node instrumentedNode) {
+	public Object afterBypass(Node instrumentedNode, Object info) {
 		return "";
 	}
+
 
 }

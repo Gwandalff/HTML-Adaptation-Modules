@@ -58,7 +58,7 @@ public class ConditionalLoading extends TruffleAdaptableModule<HTMLAdaptationCon
 	@Override
 	public void connectSoftGoal(Softgoal softgoal) {
 		if (softgoal.ID.equals("Energy")) {
-			softgoal.addContribution(destroy, 0.3);
+			softgoal.addContribution(destroy, 0.5);
 		}
 		if (softgoal.ID.equals("Accuracy")) {
 			softgoal.addContribution(destroy, -0.5);

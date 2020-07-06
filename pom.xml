@@ -16,6 +16,7 @@
 	<modules>
 		<module>ConditionalLoading</module>
 		<module>HTMLLoopPerforation</module>
+<!-- 		<module>HTMLTreePruning</module> -->
 		<module>ImageDegradation</module>
 		<module>addTools</module>
 	</modules>
