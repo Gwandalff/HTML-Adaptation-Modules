@@ -31,22 +31,20 @@ public class SrcListener extends AdaptationListener {
 	private int threshold;
 	private boolean isImage;
 	private final String FOLDER;
-	private String BASE;
+	private final String BASE;
+	private final ImageDegradation module;
 
-	public SrcListener(int threshold, String folder) {
+	public SrcListener(int threshold, String folder, String origin, ImageDegradation module) {
 		this.imageSizes = new HashMap<String, Boolean>();
 		this.threshold = threshold;
 		this.isImage = false;
-		this.BASE = "";
+		this.BASE = origin;
 		this.FOLDER = folder + (folder.endsWith("/")?"":"/");
+		this.module = module;
 	}
 
 	public void setIsImage(boolean isImage) {
 		this.isImage = isImage;
-	}
-	
-	public void setBASE(String base) {
-		this.BASE = base;
 	}
 	
 	@Override
@@ -86,6 +84,7 @@ public class SrcListener extends AdaptationListener {
 		if (imageSizes.get(url) != null && imageSizes.get(url).equals(true)) {
 			//newURL = "file://" + getDegradedName(url);
 			//newURL = newURL.replace("?", "%3F");
+			generateDegradation(url);
 			newURL = getCDNAddress(getDegradedName(url));
 		}
 
@@ -136,8 +135,6 @@ public class SrcListener extends AdaptationListener {
 
 		is.close();
 		os.close();
-
-		generateDegradation(imageUrl);
 
 		imageSizes.put(imageUrl, bytes > threshold);
 	}
